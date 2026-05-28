@@ -37,9 +37,11 @@ const userSchema = new mongoose.Schema(
         },
         startYear: {
             type: Number,
+            default: 0
         },
         endYear: {
             type: Number,
+            default: 0
         },
         // Future: college verification via student ID upload
         isCollegeVerified: {
