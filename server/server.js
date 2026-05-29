@@ -4,6 +4,7 @@ import cors from "cors";
 import { connectDB } from "./src/config/db.js";
 import authRouter from "./src/routes/authRoutes.js";
 import userRouter from "./src/routes/userRoutes.js";
+import postRouter from "./src/routes/postRoutes.js";
 dotenv.config({ path: "./.env" });
 
 if (!process.env.JWT_SECRET) {
@@ -25,6 +26,7 @@ app.use(express.json())
 
 app.use("/api/auth", authRouter)
 app.use("/api/users", userRouter)
+app.use("/api/posts", postRouter)
 
 
 const PORT = process.env.PORT;
