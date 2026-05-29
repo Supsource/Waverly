@@ -25,14 +25,19 @@ const Profile_Page = () => {
                             />
                         </div>
                         {/* Edit Button Link */}
-                        <Link to="/profile/edit" className="btn btn-secondary">
+                        <Link to="/edit-profile" className="btn btn-secondary">
                             Edit Profile
                         </Link>
                     </div>
 
                     {/* Name & Handle */}
                     <div className="profile-names">
-                        <h2>{user.name}</h2>
+                        <h2>
+                            {user.name}
+                            {user.additionalName && (
+                                <span className="profile-additional-name">({user.additionalName})</span>
+                            )}
+                        </h2>
                         <p className="profile-handle">@{user.username}</p>
                     </div>
 

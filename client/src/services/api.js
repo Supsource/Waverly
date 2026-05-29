@@ -3,7 +3,9 @@ const API_BASE = "/api/auth";
 async function request(endpoint, options = {}) {
     const token = localStorage.getItem("token");
 
-    const res = await fetch(`${API_BASE}${endpoint}`, {
+    const url = endpoint.startsWith("/api") ? endpoint : `${API_BASE}${endpoint}`;
+
+    const res = await fetch(url, {
         ...options,
         headers: {
             "Content-Type": "application/json",
@@ -29,4 +31,9 @@ export const authApi = {
         request("/login", { method: "POST", body: JSON.stringify(body) }),
 
     getMe: () => request("/me"),
+};
+
+export const userApi = {
+    updateProfile: (body) =>
+        request("/api/users/profile", { method: "PUT", body: JSON.stringify(body) }),
 };

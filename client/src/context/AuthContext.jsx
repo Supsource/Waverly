@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { authApi } from "../services/api";
+import { authApi, userApi } from "../services/api";
 
 const AuthContext = createContext(null);
 
@@ -29,6 +29,12 @@ export const AuthProvider = ({ children }) => {
         return data;
     };
 
+    const updateProfile = async (formData) => {
+        const data = await userApi.updateProfile(formData);
+        setUser(data.user);
+        return data;
+    };
+
     // On refresh: if token exists, fetch current user from /me
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -45,7 +51,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, loading, register, login, logout }}>
+        <AuthContext.Provider value={{ user, loading, register, login, logout, updateProfile }}>
             {children}
         </AuthContext.Provider>
     );

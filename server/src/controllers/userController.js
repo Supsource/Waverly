@@ -2,15 +2,15 @@ import User from "../models/User.js";
 
 export const updateUserProfile = async (req, res) => {
     try {
-        const { name, bio, collegeName, startYear, endYear, profilePic } = req.body;
+        const { name, additionalName, bio, collegeName, startYear, endYear, profilePic } = req.body;
 
         if (name !== undefined && !name.trim()) {
             return res.status(400).json({ message: "Name cannot be empty" })
         }
-        if (startYear !== undefined && isNaN(Number(startYear))) {
+        if (startYear !== undefined && startYear !== "" && isNaN(Number(startYear))) {
             return res.status(400).json({ message: "Start year must be a valid number" })
         }
-        if (endYear !== undefined && isNaN(Number(endYear))) {
+        if (endYear !== undefined && endYear !== "" && isNaN(Number(endYear))) {
             return res.status(400).json({ message: "End year must be a valid number" })
         }
 
@@ -20,12 +20,18 @@ export const updateUserProfile = async (req, res) => {
             return res.status(404).json({ message: "User not found" })
         }
 
-        user.name = name || user.name;
-        user.bio = bio || user.bio;
-        user.collegeName = collegeName || user.collegeName;
-        user.startYear = startYear || user.startYear;
-        user.endYear = endYear || user.endYear;
-        user.profilePic = profilePic || user.profilePic;
+        if (name !== undefined) user.name = name;
+        if (additionalName !== undefined) user.additionalName = additionalName;
+        if (bio !== undefined) user.bio = bio;
+        if (collegeName !== undefined) user.collegeName = collegeName;
+        
+        if (startYear !== undefined) {
+            user.startYear = startYear === "" ? 0 : Number(startYear);
+        }
+        if (endYear !== undefined) {
+            user.endYear = endYear === "" ? 0 : Number(endYear);
+        }
+        if (profilePic !== undefined) user.profilePic = profilePic;
 
         const updatedUser = await user.save();
 

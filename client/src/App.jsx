@@ -7,6 +7,7 @@ import Login_Page from "./pages/Login.jsx";
 import Register_Page from "./pages/Register.jsx";
 import Dashboard_Page from "./pages/Dashboard.jsx";
 import Profile_Page from "./pages/Profile.jsx";
+import Edit_Profile_Page from "./pages/EditProfile.jsx";
 
 const App = () => {
     return (
@@ -29,6 +30,14 @@ const App = () => {
                     element={
                         <ProtectedRoute>
                             <Profile_Page />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/edit-profile"
+                    element={
+                        <ProtectedRoute>
+                            <Edit_Profile_Page />
                         </ProtectedRoute>
                     }
                 />
