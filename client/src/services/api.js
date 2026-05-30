@@ -41,6 +41,6 @@ export const userApi = {
 export const postApi = {
     createPost: (body) =>
         request("/api/posts", { method: "POST", body: JSON.stringify(body) }),
-    getPosts: (authorId) => 
-        request(authorId ? `/api/posts?authorId=${authorId}` : "/api/posts"),
+    getPosts: () => request("/api/posts"),
+    getMyPosts: () => request("/api/posts/me"),
 };

@@ -30,37 +30,29 @@ export const createPost = async (req, res) => {
 
 export const getAllPosts = async (req, res) => {
     try {
-        const { authorId } = req.query;
-        const query = authorId ? { author: authorId } : {};
-
-        const posts = await Post.find(query)
+        const posts = await Post.find()
             .sort({ createdAt: -1 })
             .populate("author", "name username profilePic additionalName");
 
         res.status(200).json(posts);
-    } catch (err) {
+    }
+    catch (err) {
         console.error(err);
         res.status(500).json({ message: "Internal server error" });
     }
 };
 
-export const deletePost = async (req, res) => {
+export const getMyPosts = async (req, res) => {
     try {
-        const post = await Post.findById(req.params.id);
+        const posts = await Post.find({ author: req.user._id })
+            .sort({ createdAt: -1 })
+            .populate("author", "name username profilePic additionalName");
 
-        if (!post) {
-            return res.status(404).json({ message: "Post not found" });
-        }
-
-        if (post.author.toString() !== req.user._id.toString()) {
-            return res.status(403).json({ message: "You are not authorized to delete this post" });
-        }
-
-        await Post.findByIdAndDelete(req.params.id);
-
-        res.status(200).json({ message: "Post deleted successfully" });
-    } catch (err) {
+        res.status(200).json(posts);
+    }
+    catch (err) {
         console.error(err);
         res.status(500).json({ message: "Internal server error" });
     }
 };
+

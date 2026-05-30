@@ -14,7 +14,7 @@ const ProfileActivity = () => {
         const fetchPosts = async () => {
             if (!user) return;
             try {
-                const fetchedPosts = await postApi.getPosts(user._id);
+                const fetchedPosts = await postApi.getMyPosts();
                 setPosts(fetchedPosts);
             } catch (err) {
                 console.error("Failed to fetch posts", err);
