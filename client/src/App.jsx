@@ -8,6 +8,7 @@ import Register_Page from "./pages/Register.jsx";
 import Dashboard_Page from "./pages/Dashboard.jsx";
 import Profile_Page from "./pages/Profile.jsx";
 import Edit_Profile_Page from "./pages/EditProfile.jsx";
+import Feed_Page from "./pages/Feed.jsx";
 
 const App = () => {
     return (
@@ -22,6 +23,14 @@ const App = () => {
                     element={
                         <ProtectedRoute>
                             <Dashboard_Page />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/feed"
+                    element={
+                        <ProtectedRoute>
+                            <Feed_Page />
                         </ProtectedRoute>
                     }
                 />

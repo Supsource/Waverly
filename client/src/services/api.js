@@ -37,3 +37,8 @@ export const userApi = {
     updateProfile: (body) =>
         request("/api/users/profile", { method: "PUT", body: JSON.stringify(body) }),
 };
+
+export const postApi = {
+    createPost: (body) =>
+        request("/api/posts", { method: "POST", body: JSON.stringify(body) }),
+};
