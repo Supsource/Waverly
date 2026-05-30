@@ -50,7 +50,7 @@ const ProfilePosts_Page = () => {
                 {posts.length > 0 ? (
                     <div style={{ padding: '0 1rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem', alignItems: 'start' }}>
                         {posts.map(post => (
-                            <PostCard key={post._id} post={post} />
+                            <PostCard key={post._id} post={post} onDelete={(id) => setPosts(posts.filter(p => p._id !== id))} />
                         ))}
                     </div>
                 ) : (

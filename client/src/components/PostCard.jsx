@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { postApi } from "../services/api";
 
 function timeAgo(dateString) {
     if (!dateString) return '';
@@ -19,12 +21,25 @@ function timeAgo(dateString) {
     return `${years} yr ago`;
 }
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, onDelete }) => {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const { user } = useAuth();
     
     if (!post) return null;
 
     const author = post.author || {};
+    const isOwner = user && user._id === author._id;
+
+    const handleDelete = async () => {
+        try {
+            await postApi.deletePost(post._id);
+            if (onDelete) onDelete(post._id);
+        } catch (err) {
+            console.error("Failed to delete post", err);
+            setShowDeleteConfirm(false);
+        }
+    };
 
     const renderContent = () => {
         if (!post.content) return null;
@@ -46,18 +61,19 @@ const PostCard = ({ post }) => {
     };
 
     return (
-        <div className="post-card" style={{ marginBottom: '1rem', maxWidth: '600px', width: '100%' }}>
+        <div className="post-card" style={{ marginBottom: '1rem', maxWidth: '600px', width: '100%', position: 'relative' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                {/* Header Section (Avatar + User Info) */}
-                <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-                    <img 
-                        src={author.profilePic || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} 
-                        alt={author.name || "User"} 
-                        className="post-avatar"
-                        style={{ width: '52px', height: '52px', minWidth: '52px', borderRadius: '50%', objectFit: 'cover' }}
-                    />
-                    
-                    <div className="post-header" style={{ flexDirection: 'column', flexGrow: 1 }}>
+                {/* Header Section (Avatar + User Info + Delete) */}
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                        <img 
+                            src={author.profilePic || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} 
+                            alt={author.name || "User"} 
+                            className="post-avatar"
+                            style={{ width: '52px', height: '52px', minWidth: '52px', borderRadius: '50%', objectFit: 'cover' }}
+                        />
+                        
+                        <div className="post-header" style={{ flexDirection: 'column', flexGrow: 1 }}>
                         {/* Name and additional name */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                             <span className="post-author-name">{author.name}</span>
@@ -76,6 +92,47 @@ const PostCard = ({ post }) => {
                             {timeAgo(post.createdAt)}
                         </div>
                     </div>
+                    </div>
+
+                    {isOwner && (
+                        <div style={{ position: 'relative' }}>
+                            <button 
+                                className={`post-delete-btn ${showDeleteConfirm ? 'active' : ''}`} 
+                                onClick={() => setShowDeleteConfirm(!showDeleteConfirm)}
+                                title="Delete post"
+                            >
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                            </button>
+                            
+                            {showDeleteConfirm && (
+                                <div style={{ 
+                                    position: 'absolute', top: '100%', right: '0', marginTop: '0.5rem',
+                                    background: '#000', border: '1px solid #1d9bf0', borderRadius: '12px', 
+                                    padding: '1rem', width: '220px', boxShadow: '0 4px 12px rgba(255,255,255,0.1)', 
+                                    zIndex: 10 
+                                }}>
+                                    <p style={{ margin: '0 0 1rem 0', color: '#fff', fontSize: '0.95rem' }}>Are you sure you want to delete?</p>
+                                    <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                                        <button 
+                                            onClick={() => setShowDeleteConfirm(false)}
+                                            style={{ background: 'transparent', border: '1px solid #71767b', color: '#fff', cursor: 'pointer', padding: '0.4rem 0.8rem', borderRadius: '20px', fontSize: '0.85rem' }}
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button 
+                                            onClick={handleDelete}
+                                            style={{ background: '#f4212e', border: 'none', color: '#fff', cursor: 'pointer', padding: '0.4rem 0.8rem', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 'bold' }}
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
                 
                 {/* Content Section (Below Avatar & Header) */}

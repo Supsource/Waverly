@@ -43,4 +43,5 @@ export const postApi = {
         request("/api/posts", { method: "POST", body: JSON.stringify(body) }),
     getPosts: () => request("/api/posts"),
     getMyPosts: () => request("/api/posts/me"),
+    deletePost: (id) => request(`/api/posts/${id}`, { method: "DELETE" }),
 };

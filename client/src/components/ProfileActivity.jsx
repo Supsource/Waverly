@@ -45,7 +45,7 @@ const ProfileActivity = () => {
                 {hasPosts ? (
                     <div>
                         <h4 style={{ margin: '0 0 1rem 0', color: '#e7e9ea', fontWeight: '500' }}>Latest Post</h4>
-                        <PostCard post={latestPost} />
+                        <PostCard post={latestPost} onDelete={(id) => setPosts(posts.filter(p => p._id !== id))} />
                     </div>
                 ) : (
                     <div style={{ textAlign: 'center', padding: '2rem 0', color: '#71767b' }}>
